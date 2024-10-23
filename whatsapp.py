@@ -16,7 +16,6 @@ navegador.get("https://web.whatsapp.com/")
 
 sleep(15)
 
-
 for i, (mensagem, numero) in enumerate(zip(planilha["MENSAGEM"], planilha["CELULAR"])):
 
     mensagem_formatada = urllib.parse.quote(mensagem)
@@ -26,9 +25,16 @@ for i, (mensagem, numero) in enumerate(zip(planilha["MENSAGEM"], planilha["CELUL
         link = f"https://web.whatsapp.com/send?phone={numero}&text={mensagem_formatada}"
         navegador.get(link)
         sleep(10)
-        navegador.find_element(By.XPATH, '/html/body/div[1]/div/div/div[2]/div[4]/div/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p').send_keys(Keys.ENTER)
-        sleep(1)
-        print(f"Mensagem enviada com sucesso para o número {numero}\n")
+
+        # Verificação de número inválido
+        try:
+            btn_numero_invalido = navegador.find_element(By.XPATH, "/html/body/div[1]/div/div/span[2]/div/span/div/div/div/div/div/div[2]/div/button")
+            btn_numero_invalido.click()
+            print(f"O número {numero} é inválido")
+        except:
+            navegador.find_element(By.XPATH, '/html/body/div[1]/div/div/div[2]/div[4]/div/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p').send_keys(Keys.ENTER)
+            sleep(1)
+            print(f"Mensagem enviada com sucesso para o número {numero}\n")
         
     else:
 
